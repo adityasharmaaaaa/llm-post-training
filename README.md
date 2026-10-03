@@ -1,6 +1,6 @@
 # LLM Post-Training
 
-Implementations and experiments for understanding **LLM post-training**.
+Implementations and experiments for understanding **LLM post-training from first principles**.
 
 The goal of this repository is to build a deeper understanding of how modern language models are fine-tuned and optimized, rather than relying only on high-level frameworks.
 
@@ -41,6 +41,9 @@ Reinforcement Learning
 
 * LoRA parameter counting
 * LoRA forward pass
+* Recursive LoRA layer injection
+* LoRA weight merging and unmerging
+* QLoRA forward pass
 
 ### Preference Optimization
 
@@ -52,10 +55,31 @@ Coming soon.
 
 ---
 
+## Experiments
+
+### TinyStories LoRA Fine-Tuning
+
+Fine-tuned **DistilGPT2** on TinyStories using LoRA.
+
+* Base model: `distilgpt2`
+* LoRA rank: 8
+* Target module: `c_attn`
+* Learning rate: `5e-4`
+* Epochs: 3
+* Batch size: 4
+* Hardware: NVIDIA T4
+* **Validation loss: 3.0500**
+
+[Experiment details](./experiments/tinystories_lora)
+
+---
+
 ## Repository Structure
 
 ```text
 llm-post-training/
+│
+├── README.md
 │
 ├── sft/
 │   ├── chat_template.py
@@ -66,10 +90,17 @@ llm-post-training/
 │
 ├── lora/
 │   ├── parameter_count.py
-│   └── forward.py
+│   ├── forward.py
+│   ├── replace_linear.py
+│   ├── merge.py
+│   └── qlora_forward.py
+│
+├── experiments/
+│   └── tinystories_lora/
+│       ├── README.md
+│       └── train.py
 │
 ├── preference_optimization/
-│
 ├── reinforcement_learning/
 │
 ├── tests/
@@ -87,9 +118,10 @@ The implementations are intentionally kept small and explicit.
 
 The focus is on understanding:
 
-* the mathematics behind the algorithms,
-* how the training objectives are constructed,
+* the mathematics behind post-training algorithms,
+* how training objectives are constructed,
 * how token-level losses and probabilities are computed,
-* and how the individual components fit together into modern LLM post-training pipelines.
+* how parameter-efficient fine-tuning works,
+* and how these components behave in actual model-training experiments.
 
-As the repository grows, larger experiments and end-to-end implementations will be added.
+The repository will gradually progress from small first-principles implementations toward larger end-to-end experiments involving preference optimization and reinforcement learning.
